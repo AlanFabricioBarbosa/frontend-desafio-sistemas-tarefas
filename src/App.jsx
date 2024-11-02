@@ -1,35 +1,51 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from "react";
+import TaskForm from "./components/TaskForm";
+import TaskList from "./components/TaskList";
+import { getTasks, createTask, updateTask, deleteTask } from "./api";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [tasks, setTasks] = useState([]);
+  const [editingTask, setEditingTask] = useState(null);
+
+  useEffect(() => {
+    const fetchTasks = async () => {
+      const response = await getTasks();
+      setTasks(response.data);
+    };
+    fetchTasks();
+  }, []);
+
+  const addTask = async (task) => {
+    const response = await createTask(task);
+    setTasks([...tasks, response.data]);
+  };
+
+  const editTask = (task) => {
+    setEditingTask(task);
+  };
+
+  const updateTaskData = async (id, updatedTask) => {
+    const response = await updateTask(id, updatedTask);
+    setTasks(tasks.map((task) => (task._id === id ? response.data : task)));
+    setEditingTask(null);
+  };
+
+  const removeTask = async (id) => {
+    await deleteTask(id);
+    setTasks(tasks.filter((task) => task._id !== id));
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div>
+      <h1>Sistema de Tarefas</h1>
+      <TaskForm
+        addTask={addTask}
+        editingTask={editingTask}
+        updateTaskData={updateTaskData}
+      />
+      <TaskList tasks={tasks} editTask={editTask} removeTask={removeTask} />
+    </div>
+  );
 }
 
-export default App
+export default App;
