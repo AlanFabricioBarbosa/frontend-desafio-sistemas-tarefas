@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 
-function TaskForm({ addTask, editingTask, updateTaskData }) {
+function TaskForm({ addTask, editingTask, updateTaskData, tasks }) {
   const [task, setTask] = useState({
     name: "",
     cost: "",
     deadline: "",
-    order: "",
   });
+
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (editingTask) {
@@ -17,20 +18,31 @@ function TaskForm({ addTask, editingTask, updateTaskData }) {
 
   const handleChange = (e) => {
     setTask({ ...task, [e.target.name]: e.target.value });
+    setError("");
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const isDuplicate = tasks.some(
+      (t) => t.name === task.name && t._id !== editingTask?._id
+    );
+    if (isDuplicate) {
+      setError("Uma tarefa com esse nome já existe!");
+      return;
+    }
+
     if (editingTask) {
       updateTaskData(editingTask._id, task);
     } else {
       addTask(task);
     }
-    setTask({ name: "", cost: "", deadline: "", order: "" });
+
+    setTask({ name: "", cost: "", deadline: "" });
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="task-form">
       <input
         name="name"
         value={task.name}
@@ -54,14 +66,7 @@ function TaskForm({ addTask, editingTask, updateTaskData }) {
         type="date"
         required
       />
-      <input
-        name="order"
-        value={task.order}
-        onChange={handleChange}
-        placeholder="Ordem"
-        type="number"
-        required
-      />
+      {error && <p className="error">{error}</p>}
       <button type="submit">
         {editingTask ? "Atualizar Tarefa" : "Adicionar Tarefa"}
       </button>
@@ -76,9 +81,9 @@ TaskForm.propTypes = {
     name: PropTypes.string,
     cost: PropTypes.number,
     deadline: PropTypes.string,
-    order: PropTypes.number,
   }),
   updateTaskData: PropTypes.func.isRequired,
+  tasks: PropTypes.array.isRequired,
 };
 
 export default TaskForm;

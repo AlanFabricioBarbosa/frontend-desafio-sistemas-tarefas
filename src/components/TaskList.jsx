@@ -1,18 +1,46 @@
 import PropTypes from "prop-types";
+import { FaEdit, FaTrash, FaArrowUp, FaArrowDown } from "react-icons/fa";
+import "../styles/components/_task.scss";
 
-function TaskList({ tasks, editTask, removeTask }) {
+function TaskList({ tasks, editTask, removeTask, reorderTask }) {
   return (
-    <ul>
-      {tasks.map((task) => (
-        <li key={task._id}>
-          <h3>{task.name}</h3>
-          <p>Custo: {task.cost}</p>
-          <p>Prazo Final: {new Date(task.deadline).toLocaleDateString()}</p>
-          <p>Ordem: {task.order}</p>
-          <button onClick={() => editTask(task)}>Editar</button>
-          <button onClick={() => removeTask(task._id)}>Deletar</button>
-        </li>
-      ))}
+    <ul className="task-list">
+      {tasks
+        .sort((a, b) => a.order - b.order)
+        .map((task, index) => (
+          <li
+            key={task._id}
+            className={`task-item ${task.cost >= 1000 ? "high-cost" : ""}`}
+          >
+            <h3>{task.name}</h3>
+            <p>Custo: R${task.cost}</p>
+            <p>Prazo Final: {new Date(task.deadline).toLocaleDateString()}</p>
+            <div className="task-actions">
+              <button onClick={() => editTask(task)}>
+                <FaEdit className="icon edit-icon" />
+              </button>
+              <button
+                onClick={() => {
+                  if (confirm("Deseja realmente excluir esta tarefa?")) {
+                    removeTask(task._id);
+                  }
+                }}
+              >
+                <FaTrash className="icon delete-icon" />{" "}
+              </button>
+              {index > 0 && (
+                <button onClick={() => reorderTask(task._id, "up")}>
+                  <FaArrowUp className="icon move-up-icon" />{" "}
+                </button>
+              )}
+              {index < tasks.length - 1 && (
+                <button onClick={() => reorderTask(task._id, "down")}>
+                  <FaArrowDown className="icon move-down-icon" />{" "}
+                </button>
+              )}
+            </div>
+          </li>
+        ))}
     </ul>
   );
 }
@@ -29,6 +57,7 @@ TaskList.propTypes = {
   ).isRequired,
   editTask: PropTypes.func.isRequired,
   removeTask: PropTypes.func.isRequired,
+  reorderTask: PropTypes.func.isRequired,
 };
 
 export default TaskList;

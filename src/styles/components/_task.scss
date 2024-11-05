@@ -1,0 +1,93 @@
+@import "../base/variables";
+
+.task-form {
+  display: flex;
+
+  gap: 1.7rem;
+  input,
+  button {
+    padding: 0.5rem;
+    border-radius: 4px;
+    font-size: $font-size-small;
+  }
+  .error {
+    color: red;
+    font-size: $font-size-small;
+  }
+}
+
+.task-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 1rem;
+  width: 100%;
+}
+
+.task-item {
+  padding: 1rem;
+  border: 1px solid $color-accent;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  position: relative;
+
+  h3 {
+    font-size: $font-size-large;
+  }
+
+  &.highlight {
+    background-color: lighten($color-highlight, 20%);
+  }
+
+  &.high-cost {
+    background-color: #ffd700;
+  }
+
+  button {
+    padding: 0.4rem;
+    border-radius: 4px;
+    font-size: $font-size-small;
+    align-self: flex-end;
+    &:hover {
+      background-color: $color-button-hover;
+    }
+  }
+}
+
+.task-actions {
+  display: flex;
+  gap: 0.5rem;
+
+  button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.3rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    transition: transform 0.2s, color 0.2s;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+
+    .icon {
+      font-size: 1.2rem;
+    }
+
+    .edit-icon {
+      color: $color-success;
+    }
+
+    .delete-icon {
+      color: $color-danger;
+    }
+
+    .move-up-icon,
+    .move-down-icon {
+      color: $color-button-hover;
+    }
+  }
+}
