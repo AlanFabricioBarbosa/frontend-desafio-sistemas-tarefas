@@ -11,8 +11,6 @@ Este é um projeto de um sistema de tarefas desenvolvido em React, com um backen
 - [Instalação](#instalação)
 - [Estrutura de Pastas](#estrutura-de-pastas)
 - [Uso](#uso)
-- [Contribuição](#contribuição)
-- [Licença](#licença)
 
 ## Sobre o Projeto
 
