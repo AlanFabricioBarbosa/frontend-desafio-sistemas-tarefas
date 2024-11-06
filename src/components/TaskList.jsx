@@ -1,8 +1,16 @@
 import PropTypes from "prop-types";
+import { useState } from "react";
 import { FaEdit, FaTrash, FaArrowUp, FaArrowDown } from "react-icons/fa";
 import "../styles/components/_task.scss";
 
 function TaskList({ tasks, editTask, removeTask, reorderTask }) {
+  const [editingTaskId, setEditingTaskId] = useState(null);
+
+  const handleEditClick = (task) => {
+    setEditingTaskId(task._id);
+    editTask(task);
+  };
+
   return (
     <ul className="task-list">
       {tasks
@@ -10,13 +18,16 @@ function TaskList({ tasks, editTask, removeTask, reorderTask }) {
         .map((task, index) => (
           <li
             key={task._id}
-            className={`task-item ${task.cost >= 1000 ? "high-cost" : ""}`}
+            className={`task-item ${task.cost >= 1000 ? "high-cost" : ""} ${
+              editingTaskId === task._id ? "editing" : ""
+            }`}
           >
-            <h3>{task.name}</h3>
+            <h2>{task.name}</h2>
+            <h4>ID: {task._id}</h4>
             <p>Custo: R${task.cost}</p>
             <p>Prazo Final: {new Date(task.deadline).toLocaleDateString()}</p>
             <div className="task-actions">
-              <button onClick={() => editTask(task)}>
+              <button onClick={() => handleEditClick(task)}>
                 <FaEdit className="icon edit-icon" />
               </button>
               <button
