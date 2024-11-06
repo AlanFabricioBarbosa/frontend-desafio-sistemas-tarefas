@@ -2,6 +2,9 @@
 
 Este é um projeto de um sistema de tarefas desenvolvido em React, com um backend baseado em uma API que permite a criação, edição, exclusão e ordenação de tarefas. O objetivo é organizar e gerenciar tarefas de forma prática, oferecendo uma interface intuitiva e funcional.
 
+   ## Deploy
+   https://frontend-desafio-sistemas-tarefas.vercel.app/
+
 ## Índice
 
 - [Sobre o Projeto](#sobre-o-projeto)
